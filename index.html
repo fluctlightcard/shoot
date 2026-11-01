@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Little Something Just For You 💗</title>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Caveat:wght@600;700&family=Fredoka:wght@400;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        pastelPink: '#ffd1dc',
+                        pastelCream: '#fffdf9',
+                        pastelLavender: '#e6e6fa',
+                        pastelBlue: '#d0f0fd',
+                        pastelYellow: '#fef9e7',
+                        roseAccent: '#ff6b8b'
+                    },
+                    fontFamily: {
+                        quicksand: ['Quicksand', 'sans-serif'],
+                        caveat: ['Caveat', 'cursive'],
+                        fredoka: ['Fredoka', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Quicksand', sans-serif;
+            background-color: #fffdf9;
+            color: #4a4a4a;
+            overflow-x: hidden;
+        }
+        .font-handwritten { font-family: 'Caveat', cursive; }
+        .font-playful { font-family: 'Fredoka', sans-serif; }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-10px) rotate(3deg); }
+        }
+        @keyframes pulse-glow {
+            0%, 100% { transform: scale(1); box-shadow: 0 0 15px rgba(255, 107, 139, 0.4); }
+            50% { transform: scale(1.05); box-shadow: 0 0 25px rgba(255, 107, 139, 0.8); }
+        }
+        @keyframes wiggle {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(-8deg); }
+            75% { transform: rotate(8deg); }
+        }
+        @keyframes spin-fast {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .animate-float { animation: float 4s ease-in-out infinite; }
+        .animate-pulse-glow { animation: pulse-glow 2s infinite; }
+        .animate-wiggle { animation: wiggle 0.4s ease-in-out; }
+        .animate-spin-fast { animation: spin-fast 0.6s linear; }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 10px; }
+        ::-webkit-scrollbar-track { background: #fffdf9; }
+        ::-webkit-scrollbar-thumb { background: #ffd1dc; border-radius: 9999px; }
+        ::-webkit-scrollbar-thumb:hover { background: #ffb6c1; }
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                scroll-behavior: auto !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+<body class="bg-pastelCream min-h-screen relative selection:bg-pastelPink selection:text-rose-700">
+
+    <!-- Cursor Follower & Floating Hearts -->
+    <div id="cursor-heart" class="fixed pointer-events-none text-rose-400 z-50 text-xl transition-all duration-75 hidden md:block" style="transform: translate(-50%, -50%);">❤️</div>
+
+    <!-- Top Navigation / Progress Bar -->
+    <header class="fixed top-0 left-0 right-0 z-40 bg-white/80 backdrop-blur-md shadow-sm border-b border-pink-100 px-4 py-3 flex justify-between items-center">
+        <div class="flex items-center space-x-2">
+            <span class="text-2xl animate-bounce">💌</span>
+            <span class="font-playful text-rose-500 font-semibold tracking-wide text-sm md:text-base">For Someone Special</span>
+        </div>
+        <div class="flex items-center space-x-3">
+            <button id="sound-toggle" class="bg-pink-100 hover:bg-pink-200 text-rose-600 px-3 py-1.5 rounded-full text-xs font-semibold transition flex items-center space-x-1 shadow-sm">
+                <span>🔇</span> <span id="sound-label">Sound Off</span>
+            </button>
+            <div id="progress-bar-container" class="w-24 md:w-32 bg-gray-100 h-2.5 rounded-full overflow-hidden border border-pink-200">
+                <div id="progress-bar" class="bg-gradient-to-r from-pink-400 to-rose-400 h-full w-0 transition-all duration-300"></div>
+            </div>
+        </div>
+    </header>
+
+    <!-- SECTION 1: OPENING EXPERIENCE -->
+    <section id="opening-screen" class="min-h-screen flex flex-col items-center justify-center relative p-6 bg-gradient-to-b from-pink-50 via-pastelCream to-purple-50 text-center">
+        <div class="absolute inset-0 overflow-hidden pointer-events-none">
+            <div class="absolute top-1/4 left-10 text-3xl animate-float">✨</div>
+            <div class="absolute bottom-1/4 right-12 text-3xl animate-float" style="animation-delay: 1.5s;">🌸</div>
+            <div class="absolute top-1/3 right-1/4 text-2xl animate-float" style="animation-delay: 0.8s;">⭐</div>
+        </div>
+
+        <div class="max-w-md w-full bg-white/90 backdrop-blur-sm p-8 rounded-3xl shadow-xl border-2 border-pink-200 relative z-10 transform transition-all duration-500 hover:scale-[1.01]">
+            <h1 class="text-3xl md:text-4xl font-playful font-bold text-rose-500 mb-2">Hey, you! 💗</h1>
+            <p class="text-gray-600 text-base md:text-lg mb-6 font-medium">Someone made something special just for you...</p>
+            
+            <div id="envelope-container" class="cursor-pointer group relative my-8 inline-block transition-transform duration-300 hover:scale-105" onclick="openEnvelope()">
+                <div class="w-48 h-32 bg-pink-200 rounded-2xl mx-auto shadow-md border-4 border-pink-300 flex items-center justify-center relative overflow-hidden group-hover:bg-pink-300 transition-colors">
+                    <div class="absolute -top-12 left-0 w-0 h-0 border-x-[96px] border-x-transparent border-b-[48px] border-b-pink-300 transition-all"></div>
+                    <div class="text-4xl z-10 animate-pulse">💖</div>
+                    <div id="letter-preview" class="absolute inset-x-4 bottom-2 bg-white p-3 rounded-lg shadow-inner text-xs text-rose-600 font-handwritten opacity-0 transform translate-y-8 transition-all duration-500">
+                        "For the prettiest smile..."
+                    </div>
+                </div>
+                <p class="text-xs text-rose-400 mt-3 font-semibold tracking-wide">Tap the envelope to open ✨</p>
+            </div>
+
+            <button id="surprise-btn" onclick="startExperience()" class="w-full bg-gradient-to-r from-rose-400 to-pink-400 hover:from-rose-500 hover:to-pink-500 text-white font-playful font-semibold py-3 px-6 rounded-2xl shadow-md transition transform active:scale-95 text-base flex items-center justify-center space-x-2">
+                <span>Open your little surprise</span>
+                <span>✨</span>
+            </button>
+        </div>
+    </section>
+
+    <!-- MAIN WEBSITE CONTENT (Initially Hidden/Transferred after Opening) -->
+    <div id="main-content" class="hidden opacity-0 transition-opacity duration-1000">
+
+        <!-- SECTION 2: A LITTLE SOMETHING ABOUT YOU -->
+        <section class="min-h-screen py-24 px-6 max-w-5xl mx-auto flex flex-col justify-center">
+            <div class="text-center mb-12">
+                <span class="text-xs font-bold uppercase tracking-widest bg-pink-100 text-rose-600 px-3 py-1 rounded-full">Appreciation Station</span>
+                <h2 class="text-3xl md:text-4xl font-playful font-bold text-gray-800 mt-3">A Little Something About You 🌷</h2>
+                <p class="text-gray-500 mt-2 text-sm md:text-base">Click each card to discover tiny little secrets!</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Card 1 -->
+                <div onclick="flipCard(this)" class="bg-white p-6 rounded-3xl shadow-md border-2 border-pink-100 cursor-pointer hover:shadow-xl hover:border-pink-300 transition-all duration-300 transform hover:-translate-y-1 relative overflow-hidden group">
+                    <div class="flex items-center space-x-3 mb-3">
+                        <span class="text-3xl group-hover:scale-125 transition-transform">🌸</span>
+                        <h3 class="font-playful font-bold text-gray-700">Prettiest Smile</h3>
+                    </div>
+                    <p class="text-gray-600 text-sm">"You have the prettiest smile that instantly lights up the whole room."</p>
+                    <div class="secret-msg mt-3 pt-3 border-t border-pink-50 text-xs font-handwritten text-rose-500 hidden">
+                        ✨ Hidden secret: It literally makes my day every single time!
+                    </div>
+                </div>
+
+                <!-- Card 2 -->
+                <div onclick="flipCard(this)" class="bg-white p-6 rounded-3xl shadow-md border-2 border-pink-100 cursor-pointer hover:shadow-xl hover:border-pink-300 transition-all duration-300 transform hover:-translate-y-1 relative overflow-hidden group">
+                    <div class="flex items-center space-x-3 mb-3">
+                        <span class="text-3xl group-hover:scale-125 transition-transform">☕</span>
+                        <h3 class="font-playful font-bold text-gray-700">Ordinary Days</h3>
+                    </div>
+                    <p class="text-gray-600 text-sm">"You make ordinary days feel wonderfully special and full of warmth."</p>
+                    <div class="secret-msg mt-3 pt-3 border-t border-pink-50 text-xs font-handwritten text-rose-500 hidden">
+                        ✨ Hidden secret: Even doing nothing together is my favorite part.
+                    </div>
+                </div>
+
+                <!-- Card 3 -->
+                <div onclick="flipCard(this)" class="bg-white p-6 rounded-3xl shadow-md border-2 border-pink-100 cursor-pointer hover:shadow-xl hover:border-pink-300 transition-all duration-300 transform hover:-translate-y-1 relative overflow-hidden group">
+                    <div class="flex items-center space-x-3 mb-3">
+                        <span class="text-3xl group-hover:scale-125 transition-transform">✨</span>
+                        <h3 class="font-playful font-bold text-gray-700">Brighter Vibe</h3>
+                    </div>
+                    <p class="text-gray-600 text-sm">"Your mere existence makes things a little brighter and much sweeter."</p>
+                    <div class="secret-msg mt-3 pt-3 border-t border-pink-50 text-xs font-handwritten text-rose-500 hidden">
+                        ✨ Hidden secret: Even this star agrees you're truly one of a kind!
+                    </div>
+                </div>
+
+                <!-- Card 4 -->
+                <div onclick="flipCard(this)" class="bg-white p-6 rounded-3xl shadow-md border-2 border-pink-100 cursor-pointer hover:shadow-xl hover:border-pink-300 transition-all duration-300 transform hover:-translate-y-1 relative overflow-hidden group">
+                    <div class="flex items-center space-x-3 mb-3">
+                        <span class="text-3xl group-hover:scale-125 transition-transform">📱</span>
+                        <h3 class="font-playful font-bold text-gray-700">Favorite Alert</h3>
+                    </div>
+                    <p class="text-gray-600 text-sm">"You are definitely someone's favorite notification of the day."</p>
+                    <div class="secret-msg mt-3 pt-3 border-t border-pink-50 text-xs font-handwritten text-rose-500 hidden">
+                        ✨ Hidden secret: Spoiler alert—it's mine! 🙈
+                    </div>
+                </div>
+
+                <!-- Card 5 -->
+                <div onclick="flipCard(this)" class="bg-white p-6 rounded-3xl shadow-md border-2 border-pink-100 cursor-pointer hover:shadow-xl hover:border-pink-300 transition-all duration-300 transform hover:-translate-y-1 relative overflow-hidden group">
+                    <div class="flex items-center space-x-3 mb-3">
+                        <span class="text-3xl group-hover:scale-125 transition-transform">🧸</span>
+                        <h3 class="font-playful font-bold text-gray-700">Pure Joy</h3>
+                    </div>
+                    <p class="text-gray-600 text-sm">"You deserve all the absolute happiness and warmth in this world."</p>
+                    <div class="secret-msg mt-3 pt-3 border-t border-pink-50 text-xs font-handwritten text-rose-500 hidden">
+                        ✨ Hidden secret: You just made this little heart happier! ❤️
+                    </div>
+                </div>
+
+                <!-- Card 6 -->
+                <div onclick="flipCard(this)" class="bg-white p-6 rounded-3xl shadow-md border-2 border-pink-100 cursor-pointer hover:shadow-xl hover:border-pink-300 transition-all duration-300 transform hover:-translate-y-1 relative overflow-hidden group">
+                    <div class="flex items-center space-x-3 mb-3">
+                        <span class="text-3xl group-hover:scale-125 transition-transform">🦋</span>
+                        <h3 class="font-playful font-bold text-gray-700">Butterflies</h3>
+                    </div>
+                    <p class="text-gray-600 text-sm">"Your laugh is quite literally my favorite sound in the universe."</p>
+                    <div class="secret-msg mt-3 pt-3 border-t border-pink-50 text-xs font-handwritten text-rose-500 hidden">
+                        ✨ Hidden secret: It gives me butterflies every single time.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 3: LITTLE INTERACTIVE GARDEN 🌷 -->
+        <section class="min-h-screen py-24 px-6 max-w-4xl mx-auto flex flex-col justify-center">
+            <div class="text-center mb-8">
+                <span class="text-xs font-bold uppercase tracking-widest bg-green-100 text-green-600 px-3 py-1 rounded-full">Blooming Sanctuary</span>
+                <h2 class="text-3xl md:text-4xl font-playful font-bold text-gray-800 mt-3">Little Interactive Garden 🌷</h2>
+                <p class="text-gray-500 mt-2 text-sm md:text-base">Click the flowers to bloom them and discover sweet surprises!</p>
+            </div>
+
+            <div class="bg-gradient-to-b from-green-50 to-emerald-50 p-8 rounded-3xl shadow-inner border-2 border-green-200 relative min-h-[350px] flex flex-col items-center justify-center">
+                <div id="garden-message" class="bg-white/90 backdrop-blur-sm px-6 py-3 rounded-2xl shadow-md text-rose-500 font-handwritten text-lg mb-8 transition-all min-h-[45px] flex items-center justify-center border border-pink-100">
+                    "Click a flower in the garden below! 🌻"
+                </div>
+
+                <div class="flex flex-wrap justify-center gap-6 md:gap-10">
+                    <!-- Flower 1 -->
+                    <button onclick="bloomFlower(this, 'A flower for someone wonderful! 🌷')" class="group p-4 bg-white rounded-2xl shadow-md border border-green-200 hover:scale-110 transition transform">
+                        <span class="text-4xl md:text-5xl block group-hover:rotate-12 transition-transform">🌻</span>
+                        <span class="text-xs text-gray-500 font-semibold mt-1 block">Sunflower</span>
+                    </button>
+                    <!-- Flower 2 -->
+                    <button onclick="bloomFlower(this, 'You just made this garden much prettier! 🌸')" class="group p-4 bg-white rounded-2xl shadow-md border border-green-200 hover:scale-110 transition transform">
+                        <span class="text-4xl md:text-5xl block group-hover:-rotate-12 transition-transform">🌷</span>
+                        <span class="text-xs text-gray-500 font-semibold mt-1 block">Tulip</span>
+                    </button>
+                    <!-- Flower 3 -->
+                    <button onclick="bloomFlower(this, 'Someone is smiling somewhere right now because of you! 💖')" class="group p-4 bg-white rounded-2xl shadow-md border border-green-200 hover:scale-110 transition transform">
+                        <span class="text-4xl md:text-5xl block group-hover:rotate-12 transition-transform">🌹</span>
+                        <span class="text-xs text-gray-500 font-semibold mt-1 block">Rose</span>
+                    </button>
+                    <!-- Flower 4 -->
+                    <button onclick="bloomFlower(this, 'You bloom effortlessly every single day ✨')" class="group p-4 bg-white rounded-2xl shadow-md border border-green-200 hover:scale-110 transition transform">
+                        <span class="text-4xl md:text-5xl block group-hover:-rotate-12 transition-transform">🌼</span>
+                        <span class="text-xs text-gray-500 font-semibold mt-1 block">Daisy</span>
+                    </button>
+                </div>
+
+                <div class="absolute bottom-3 right-4 text-xs text-green-700 font-medium">
+                    🐝 Buzzing with love
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 4: A LITTLE GAME 🎮 -->
+        <section class="min-h-screen py-24 px-6 max-w-4xl mx-auto flex flex-col justify-center">
+            <div class="text-center mb-10">
+                <span class="text-xs font-bold uppercase tracking-widest bg-purple-100 text-purple-600 px-3 py-1 rounded-full">Playground</span>
+                <h2 class="text-3xl md:text-4xl font-playful font-bold text-gray-800 mt-3">A Little Game & Fun 🎮</h2>
+                <p class="text-gray-500 mt-2 text-sm md:text-base">Test your luck or catch some flying hearts!</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Mini Game 1: Catch Hearts -->
+                <div class="bg-white p-6 rounded-3xl shadow-md border-2 border-purple-100 flex flex-col justify-between">
+                    <div>
+                        <h3 class="font-playful font-bold text-lg text-gray-700 flex items-center space-x-2">
+                            <span>🎯</span> <span>Heart Catcher</span>
+                        </h3>
+                        <p class="text-gray-500 text-sm mt-1">Click as many floating hearts as you can!</p>
+                    </div>
+                    <div id="heart-game-area" class="h-44 bg-purple-50/50 rounded-2xl border border-purple-200 relative my-4 overflow-hidden flex items-center justify-center cursor-pointer">
+                        <button id="start-game-btn" onclick="startHeartGame()" class="bg-purple-400 hover:bg-purple-500 text-white font-playful text-sm px-4 py-2 rounded-xl shadow transition">Start Catching!</button>
+                        <div id="game-score" class="absolute top-2 right-3 text-xs font-bold text-purple-600 hidden">Score: <span id="score-val">0</span></div>
+                    </div>
+                    <div id="game-feedback" class="text-xs text-rose-500 font-handwritten text-center min-h-[20px]"></div>
+                </div>
+
+                <!-- Mini Game 2: Lucky Wheel / Compliment Generator -->
+                <div class="bg-white p-6 rounded-3xl shadow-md border-2 border-purple-100 flex flex-col justify-between">
+                    <div>
+                        <h3 class="font-playful font-bold text-lg text-gray-700 flex items-center space-x-2">
+                            <span>🎡</span> <span>How Lucky Are You?</span>
+                        </h3>
+                        <p class="text-gray-500 text-sm mt-1">Spin to reveal a cute fortune or compliment!</p>
+                    </div>
+                    <div class="bg-pink-50/50 p-6 rounded-2xl border border-pink-200 my-4 text-center">
+                        <div id="fortune-display" class="font-handwritten text-xl text-rose-600 min-h-[60px] flex items-center justify-center">
+                            "Click the button below to test your daily luck!"
+                        </div>
+                    </div>
+                    <button onclick="spinFortune()" class="w-full bg-gradient-to-r from-purple-400 to-pink-400 hover:from-purple-500 hover:to-pink-500 text-white font-playful font-semibold py-2.5 rounded-xl shadow transition text-sm">
+                        ✨ Spin for a Fortune ✨
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 5: A LITTLE LOVE LETTER 💌 -->
+        <section class="min-h-screen py-24 px-6 max-w-3xl mx-auto flex flex-col justify-center">
+            <div class="text-center mb-10">
+                <span class="text-xs font-bold uppercase tracking-widest bg-rose-100 text-rose-600 px-3 py-1 rounded-full">Heart to Heart</span>
+                <h2 class="text-3xl md:text-4xl font-playful font-bold text-gray-800 mt-3">A Little Love Letter 💌</h2>
+            </div>
+
+            <div class="bg-white p-8 md:p-12 rounded-3xl shadow-xl border-2 border-pink-200 relative">
+                <div class="absolute -top-5 left-1/2 transform -translate-x-1/2 bg-rose-400 text-white px-4 py-1 rounded-full text-xs font-bold shadow-md">
+                    To My Favorite Person 💖
+                </div>
+                
+                <div class="font-handwritten text-xl md:text-2xl text-gray-700 leading-relaxed space-y-4 pt-4">
+                    <p>Hey, I don't really know how to put everything into words, but I just want you to know that you are someone truly special.</p>
+                    <p>I hope this little website makes you smile, because that's exactly what I wanted when I started making it.</p>
+                    <p>You deserve happiness, beautiful moments, and all the little things that make life wonderful.</p>
+                    <p class="text-rose-600 font-bold">And... there's actually one more thing I want to ask you.</p>
+                </div>
+
+                <div class="mt-8 text-center">
+                    <button onclick="scrollToFinal()" class="bg-gradient-to-r from-rose-400 to-pink-500 hover:from-rose-500 hover:to-pink-600 text-white font-playful font-semibold py-3 px-8 rounded-2xl shadow-lg transition transform hover:scale-105 text-base inline-flex items-center space-x-2">
+                        <span>Wait... there's more? 👀</span>
+                        <span>✨</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 6: FINAL SECTION: THE BIG QUESTION 💗 -->
+        <section id="final-section" class="min-h-screen py-24 px-6 max-w-3xl mx-auto flex flex-col items-center justify-center text-center relative">
+            <div class="absolute inset-0 overflow-hidden pointer-events-none">
+                <div class="absolute top-10 left-10 text-4xl animate-float">💖</div>
+                <div class="absolute bottom-10 right-10 text-4xl animate-float" style="animation-delay: 1s;">✨</div>
+                <div class="absolute top-1/2 right-5 text-3xl animate-float" style="animation-delay: 0.5s;">🌷</div>
+            </div>
+
+            <div class="bg-white/95 backdrop-blur-md p-8 md:p-12 rounded-3xl shadow-2xl border-4 border-pink-300 relative z-10 w-full max-w-xl animate-pulse-glow">
+                <div class="text-6xl mb-4 animate-bounce">🥺👉👈</div>
+                <h2 class="text-3xl md:text-4xl font-playful font-bold text-gray-800 mb-6">
+                    Will u be my girlfriend?
+                </h2>
+                
+                <div id="decision-buttons" class="flex flex-col sm:flex-row items-center justify-center gap-4 mt-8 relative min-h-[80px]">
+                    <button id="yes-btn" onclick="sayYes()" class="bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-600 hover:to-pink-600 text-white font-playful font-bold text-lg px-8 py-4 rounded-2xl shadow-lg transition transform hover:scale-110 animate-bounce flex items-center space-x-2 border-2 border-white z-20">
+                        <span>YES! 💗</span>
+                    </button>
+                    
+                    <button id="no-btn" onclick="handleNoClick()" class="bg-gray-100 hover:bg-gray-200 text-gray-600 font-playful font-semibold text-base px-6 py-3 rounded-2xl shadow transition relative">
+                        NO 🙈
+                    </button>
+                </div>
+                <div id="no-feedback" class="mt-4 text-xs font-handwritten text-rose-500 min-h-[25px]"></div>
+            </div>
+        </section>
+
+        <!-- SUCCESS CELEBRATION MODAL / SCREEN -->
+        <div id="success-screen" class="fixed inset-0 bg-pink-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-6 hidden">
+            <div class="bg-white p-8 md:p-12 rounded-3xl shadow-2xl border-4 border-pink-300 text-center max-w-md w-full relative animate-float">
+                <div class="text-6xl mb-4">🥳🎉💖</div>
+                <h2 class="text-3xl font-playful font-bold text-rose-600 mb-2">WAIT... REALLY?! 🥹💗</h2>
+                <p class="text-gray-700 font-medium text-lg mb-4">YOU JUST MADE MY DAY!</p>
+                <p class="text-gray-500 text-sm mb-8">Thank you for making this little adventure even more special.</p>
+                <button onclick="resetExperience()" class="bg-rose-500 hover:bg-rose-600 text-white font-playful font-semibold px-6 py-3 rounded-2xl shadow transition">
+                    Replay Experience ✨
+                </button>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="py-8 text-center text-xs text-gray-400 font-medium border-t border-pink-100">
+            Made with a little bit of courage and lots of love ❤️
+        </footer>
+    </div>
+
+    <!-- AUDIO ELEMENTS (Silent / Optional via Web Audio API or lightweight synthesizers) -->
+    <script>
+        let soundEnabled = false;
+        let noClickCount = 0;
+
+        // Sound Toggle Handler
+        const soundToggleBtn = document.getElementById('sound-toggle');
+        const soundLabel = document.getElementById('sound-label');
+        soundToggleBtn.addEventListener('click', () => {
+            soundEnabled = !soundEnabled;
+            soundLabel.textContent = soundEnabled ? 'Sound On' : 'Sound Off';
+            soundToggleBtn.classList.toggle('bg-pink-200', soundEnabled);
+            playSound('pop');
+        });
+
+        // Simple Web Audio API sound generator for cute SFX
+        function playSound(type) {
+            if (!soundEnabled) return;
+            try {
+                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+
+                if (type === 'pop') {
+                    osc.frequency.setValueAtTime(400, audioCtx.currentTime);
+                    osc.frequency.exponentialRampToValueAtTime(800, audioCtx.currentTime + 0.1);
+                    gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.1);
+                } else if (type === 'success') {
+                    osc.frequency.setValueAtTime(523.25, audioCtx.currentTime); // C5
+                    osc.frequency.setValueAtTime(659.25, audioCtx.currentTime + 0.1); // E5
+                    osc.frequency.setValueAtTime(783.99, audioCtx.currentTime + 0.2); // G5
+                    gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.4);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.4);
+                }
+            } catch (e) {
+                console.log("Audio not supported or blocked");
+            }
+        }
+
+        // Cursor Heart Follower
+        const cursorHeart = document.getElementById('cursor-heart');
+        // Opening Experience
+        function openEnvelope() {
+            playSound('pop');
+            const preview = document.getElementById('letter-preview');
+            preview.classList.remove('opacity-0', 'translate-y-8');
+            preview.classList.add('opacity-100', 'translate-y-0');
+        }
+
+        function startExperience() {
+            playSound('success');
+            const opening = document.getElementById('opening-screen');
+            const main = document.getElementById('main-content');
+            
+            opening.style.transition = 'opacity 0.8s ease';
+            opening.style.opacity = '0';
+            opening.style.pointerEvents = 'none';
+
+            window.setTimeout(() => {
+                opening.classList.add('hidden');
+                main.classList.remove('hidden');
+                requestAnimationFrame(() => {
+                    main.classList.remove('opacity-0');
+                    main.classList.add('opacity-100');
+                });
+                updateProgress();
+            }, 850);
+        }
+
+        // Appreciation cards: reveal/hide their hidden messages.
+        function flipCard(card) {
+            const secret = card.querySelector('.secret-msg');
+            if (!secret) return;
+            secret.classList.toggle('hidden');
+            card.classList.toggle('border-rose-300');
+            card.classList.toggle('bg-pink-50');
+            playSound('pop');
+        }
+
+        // Garden interactions.
+        function bloomFlower(button, message) {
+            const output = document.getElementById('garden-message');
+            output.textContent = message;
+            button.classList.remove('animate-wiggle');
+            void button.offsetWidth;
+            button.classList.add('animate-wiggle');
+            const flower = button.querySelector('span');
+            if (flower) flower.classList.add('scale-125');
+            playSound('pop');
+        }
+
+        // Heart Catcher: one lightweight target at a time, with a short round.
+        let heartGameTimer = null;
+        let heartSpawnTimer = null;
+        let gameScore = 0;
+        let gameRunning = false;
+
+        function startHeartGame() {
+            const area = document.getElementById('heart-game-area');
+            const startButton = document.getElementById('start-game-btn');
+            const scoreBox = document.getElementById('game-score');
+            const scoreValue = document.getElementById('score-val');
+            const feedback = document.getElementById('game-feedback');
+
+            if (gameRunning) return;
+            gameRunning = true;
+            gameScore = 0;
+            scoreValue.textContent = '0';
+            scoreBox.classList.remove('hidden');
+            startButton.classList.add('hidden');
+            feedback.textContent = 'Catch as many as you can in 15 seconds! 💗';
+
+            spawnHeart();
+
+            heartGameTimer = window.setTimeout(() => {
+                gameRunning = false;
+                if (heartSpawnTimer) window.clearTimeout(heartSpawnTimer);
+                const target = area.querySelector('.game-heart');
+                if (target) target.remove();
+                startButton.textContent = 'Play Again!';
+                startButton.classList.remove('hidden');
+                feedback.textContent = `You caught ${gameScore} heart${gameScore === 1 ? '' : 's'}! That's a lot of love. 💕`;
+            }, 15000);
+        }
+
+        function spawnHeart() {
+            if (!gameRunning) return;
+            const area = document.getElementById('heart-game-area');
+            const oldHeart = area.querySelector('.game-heart');
+            if (oldHeart) oldHeart.remove();
+
+            const heart = document.createElement('button');
+            heart.type = 'button';
+            heart.className = 'game-heart absolute text-3xl leading-none transition-transform duration-150 hover:scale-125 focus:outline-none focus:ring-2 focus:ring-pink-400 rounded-full';
+            heart.textContent = ['💗', '💖', '💕', '❤️'][Math.floor(Math.random() * 4)];
+            heart.setAttribute('aria-label', 'Catch this heart');
+            const maxX = Math.max(0, area.clientWidth - 48);
+            const maxY = Math.max(0, area.clientHeight - 48);
+            heart.style.left = `${Math.random() * maxX}px`;
+            heart.style.top = `${Math.random() * maxY}px`;
+
+            heart.addEventListener('click', () => {
+                if (!gameRunning) return;
+                gameScore += 1;
+                document.getElementById('score-val').textContent = String(gameScore);
+                document.getElementById('game-feedback').textContent = ['Nice catch! ✨', 'More love for you! 💞', 'You are quick! 🐰'][Math.floor(Math.random() * 3)];
+                playSound('pop');
+                heart.remove();
+                spawnHeart();
+            }, { once: true });
+
+            area.appendChild(heart);
+            heartSpawnTimer = window.setTimeout(() => {
+                if (heart.isConnected) spawnHeart();
+            }, 1100);
+        }
+
+        // Random compliment generator.
+        const fortunes = [
+            'Your smile is somebody’s favorite sunrise. 🌅',
+            'A tiny reminder: you are wonderfully you. 🌷',
+            'Today’s forecast: 100% chance of being adorable. ☁️',
+            'You deserve a pocketful of happy moments. 💗',
+            'The universe did a pretty good job with you. ✨',
+            'Someone is very lucky to know you. 🧸',
+            'Achievement unlocked: being effortlessly lovely. 🏆'
+        ];
+
+        function spinFortune() {
+            const display = document.getElementById('fortune-display');
+            display.classList.remove('animate-wiggle');
+            void display.offsetWidth;
+            display.classList.add('animate-wiggle');
+            display.textContent = fortunes[Math.floor(Math.random() * fortunes.length)];
+            playSound('pop');
+        }
+
+        // Navigate to the final question.
+        function scrollToFinal() {
+            document.getElementById('final-section').scrollIntoView({
+                behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
+                block: 'center'
+            });
+        }
+
+        // YES: celebrate the visitor's explicit choice.
+        function sayYes() {
+            playSound('success');
+            const success = document.getElementById('success-screen');
+            success.classList.remove('hidden');
+            success.setAttribute('aria-hidden', 'false');
+            launchConfetti();
+        }
+
+        // NO remains a real option. It gets progressively sillier, but never
+        // disappears, blocks the screen, or makes YES the only way forward.
+        const noMessages = [
+            'Aww, okay. Are you sure? 🥺',
+            'That button is getting stage fright. 🙈',
+            'Even the bunny needs a moment... 🐰',
+            'Plot twist: this button has zero chill. 😭',
+            'Okay, okay. I will stop being dramatic. 💗'
+        ];
+
+        function handleNoClick() {
+            noClickCount += 1;
+            const noButton = document.getElementById('no-btn');
+            const yesButton = document.getElementById('yes-btn');
+            const feedback = document.getElementById('no-feedback');
+
+            feedback.textContent = noMessages[Math.min(noClickCount - 1, noMessages.length - 1)];
+            noButton.classList.remove('animate-wiggle', 'animate-spin-fast');
+            void noButton.offsetWidth;
+
+            if (noClickCount % 4 === 0) {
+                noButton.classList.add('animate-spin-fast');
+            } else {
+                noButton.classList.add('animate-wiggle');
+            }
+
+            // A playful visual nudge, without changing the meaning or position
+            // so dramatically that the button becomes hard to use.
+            const scale = Math.max(0.88, 1 - noClickCount * 0.025);
+            noButton.style.transform = `scale(${scale})`;
+            yesButton.style.transform = `scale(${Math.min(1.18, 1 + noClickCount * 0.025)})`;
+            playSound('pop');
+        }
+
+        function resetExperience() {
+            document.getElementById('success-screen').classList.add('hidden');
+            document.getElementById('success-screen').setAttribute('aria-hidden', 'true');
+            noClickCount = 0;
+            const noButton = document.getElementById('no-btn');
+            const yesButton = document.getElementById('yes-btn');
+            const feedback = document.getElementById('no-feedback');
+            noButton.style.transform = '';
+            yesButton.style.transform = '';
+            feedback.textContent = '';
+            document.getElementById('opening-screen').classList.remove('hidden');
+            document.getElementById('opening-screen').style.opacity = '1';
+            document.getElementById('opening-screen').style.pointerEvents = '';
+            document.getElementById('main-content').classList.add('hidden', 'opacity-0');
+            document.getElementById('main-content').classList.remove('opacity-100');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Lightweight confetti: a small, finite number of emoji particles.
+        function launchConfetti() {
+            const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            if (reducedMotion) return;
+
+            const symbols = ['💗', '✨', '💕', '🌸', '🎉'];
+            for (let i = 0; i < 22; i += 1) {
+                const particle = document.createElement('span');
+                particle.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+                particle.setAttribute('aria-hidden', 'true');
+                particle.style.cssText = [
+                    'position:fixed',
+                    `left:${Math.random() * 100}vw`,
+                    'top:-30px',
+                    'z-index:60',
+                    'pointer-events:none',
+                    `font-size:${14 + Math.random() * 14}px`,
+                    `opacity:${0.7 + Math.random() * 0.3}`,
+                    `transition:transform ${1.8 + Math.random() * 1.2}s ease-in, opacity 2.5s ease-in`
+                ].join(';');
+                document.body.appendChild(particle);
+
+                requestAnimationFrame(() => {
+                    particle.style.transform = `translateY(${window.innerHeight + 80}px) rotate(${Math.random() * 500 - 250}deg)`;
+                    particle.style.opacity = '0';
+                });
+                window.setTimeout(() => particle.remove(), 3400);
+            }
+        }
+
+        // Update the reading progress indicator.
+        function updateProgress() {
+            const main = document.getElementById('main-content');
+            if (main.classList.contains('hidden')) return;
+            const scrollable = document.documentElement.scrollHeight - window.innerHeight;
+            const progress = scrollable > 0 ? (window.scrollY / scrollable) * 100 : 0;
+            document.getElementById('progress-bar').style.width = `${Math.min(100, Math.max(0, progress))}%`;
+        }
+        window.addEventListener('scroll', updateProgress, { passive: true });
+
+        // Disable the decorative cursor follower on touch and reduced-motion devices.
+        if (window.matchMedia('(pointer: fine)').matches &&
+            !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            document.addEventListener('mousemove', (event) => {
+                cursorHeart.style.left = `${event.clientX}px`;
+                cursorHeart.style.top = `${event.clientY}px`;
+            }, { passive: true });
+        } else {
+            cursorHeart.classList.add('hidden');
+        }
+
+        // Keyboard support for the envelope.
+        const envelope = document.getElementById('envelope-container');
+        envelope.setAttribute('role', 'button');
+        envelope.setAttribute('tabindex', '0');
+        envelope.setAttribute('aria-label', 'Open the envelope');
+        envelope.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter' || event.key === ' ') {
+                event.preventDefault();
+                openEnvelope();
+            }
+        });
+
+        // Respect reduced motion globally.
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            document.documentElement.classList.add('reduce-motion');
+        }
+    </script>
+</body>
+</html>
